@@ -1,4 +1,4 @@
-#dotenv: .env
+dotenv: .env
 
 paths:
   contracts: ./contracts
@@ -13,7 +13,13 @@ compiler:
       - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@5.0.2'
 
 networks:
-  #sepolia:
-  #  host: "https://sepolia.infura.io/v3/WEB3_INFURA_PROJECT_ID"
+  sepolia:
+    host: "https://sepolia.infura.io/v3/WEB3_INFURA_PROJECT_ID"
+    gas_price: auto
+    gas_limit: auto
+    verify: True
   development:
     cmd: ganache-cli
+
+api_keys:
+  etherscan: ETHERSCAN_API

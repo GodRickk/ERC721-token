@@ -25,7 +25,7 @@ def test_should_mint_allowed_amount(nft_contract):
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
 
     assert nft_contract.balanceOf(accounts[1]) == 3
-    assert nft_contract.totalSupply() == 3
+    assert nft_contract.totalMinted() == 3
     assert nft_contract.balance() == initial_contract_balance + web3.to_wei(0.003, 'ether')
     assert accounts[0].balance() == initial_balance
 
@@ -37,7 +37,7 @@ def test_should_mint_6_tokens_per_account(nft_contract):
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
 
     assert nft_contract.balanceOf(accounts[1]) == 6
-    assert nft_contract.totalSupply() == 6
+    assert nft_contract.totalMinted() == 6
     assert nft_contract.balance() == initial_contract_balance + web3.to_wei(0.006, 'ether')
 
 

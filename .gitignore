@@ -1,6 +1,9 @@
 node_modules/
 package-lock.json
 package.json
+metadata/
+.deps
+
 
 __pycache__
 .env
