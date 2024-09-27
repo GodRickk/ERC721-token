@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract MyERC721 is ERC721Enumerable, Ownable{
     uint256 public immutable TOTAL_SUPPLY;
@@ -15,8 +16,10 @@ contract MyERC721 is ERC721Enumerable, Ownable{
     // uint256 public constant MINT_PRICE = 0.001 ether;
 
     //mapping(address => uint256) public mintedTokens;
-    mapping(address => uint256) private mintedTokens;
+    
+    string public _baseTokenURI;
 
+    mapping(address => uint256) private mintedTokens;
 
     constructor(
         address initialOwner,
@@ -32,7 +35,26 @@ contract MyERC721 is ERC721Enumerable, Ownable{
     }
 
 
-     function getMintedTokens(address owner) external view returns (uint256) {
+    // Устанавливаем базовый URI для метаданных
+    function setBaseURI(string memory baseTokenURI) external onlyOwner {
+        _baseTokenURI = baseTokenURI;
+    }
+
+    // Переопределяем _baseURI для поддержки базового URI
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    // Переопределяем tokenURI для возвращения полного URI метаданных для токена
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        // require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        // В этом примере возвращаем базовый URI + tokenId + ".json"
+        return string(abi.encodePacked(_baseTokenURI, Strings.toString(tokenId), ".json"));
+    }
+
+
+    function getMintedTokens(address owner) external view returns (uint256) {
         return mintedTokens[owner];
     }
     
