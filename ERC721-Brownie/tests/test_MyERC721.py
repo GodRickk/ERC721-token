@@ -18,7 +18,7 @@ def nft_contract():
                            {'from': accounts[0]})
 
 
-def test_mint_allowed_amount(nft_contract):
+def test_should_mint_allowed_amount(nft_contract):
     initial_balance = accounts[0].balance()
     initial_contract_balance = nft_contract.balance()
     
@@ -30,7 +30,7 @@ def test_mint_allowed_amount(nft_contract):
     assert accounts[0].balance() == initial_balance
 
 
-def test_mint_6_tokens(nft_contract):
+def test_should_mint_6_tokens_per_account(nft_contract):
     initial_contract_balance = nft_contract.balance()
 
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
@@ -41,19 +41,19 @@ def test_mint_6_tokens(nft_contract):
     assert nft_contract.balance() == initial_contract_balance + web3.to_wei(0.006, 'ether')
 
 
-def test_mint_more_than_allowed(nft_contract):
+def test_should_prevent_minting_more_than_allowed(nft_contract):
     with pytest.raises(Exception):
         nft_contract.mint(4, {'from': accounts[1], 'value': web3.to_wei(0.004, 'ether')})
 
 
-def test_mint_exceeding_max_per_address(nft_contract):
+def test_should_prevent_minting_exceeding_max_per_address(nft_contract):
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
     with pytest.raises(Exception):
         nft_contract.mint(1, {'from': accounts[1], 'value': web3.to_wei(0.001, 'ether')})
     
 
-def test_mint_exceeding_total_supply(nft_contract):
+def test_should_prevent_minting_exceeding_total_supply(nft_contract):
     for i in range(33):
         nft_contract.mint(3, {'from': accounts[i], 'value': web3.to_wei(0.003, 'ether')})
 
@@ -62,12 +62,12 @@ def test_mint_exceeding_total_supply(nft_contract):
         nft_contract.mint(2, {'from': accounts[33], 'value': web3.to_wei(0.003, 'ether')})
 
 
-def test_mint_incorrect_ether_sent(nft_contract):
+def test_should_prevent_minting_with_incorrect_ether_sent(nft_contract):
     with pytest.raises(Exception):
         nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(MINT_PRICE, 'ether')})
 
 
-def test_withdraw(nft_contract):
+def test_should_withdraw_funds(nft_contract):
     initial_balance = accounts[0].balance()
 
     nft_contract.mint(1, {'from': accounts[2], 'value': web3.to_wei(0.001, 'ether')})
@@ -76,14 +76,14 @@ def test_withdraw(nft_contract):
     assert accounts[0].balance() == initial_balance + web3.to_wei(0.001, 'ether')
 
 
-def test_withdraw_insufficient_balance(nft_contract):
+def test_should_prevent_withdraw_with_insufficient_balance(nft_contract):
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
     
     with pytest.raises(Exception):
         nft_contract.withdraw(web3.to_wei(0.004, 'ether'), accounts[0], {'from': accounts[0]})
 
 
-def test_withdraw_only_owner_have_possibility(nft_contract):
+def test_should_prevent_withdraw_by_non_owner(nft_contract):
     nft_contract.mint(3, {'from': accounts[1], 'value': web3.to_wei(0.003, 'ether')})
     
     with pytest.raises(Exception):
